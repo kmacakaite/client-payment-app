@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres
+    restart: always
+    container_name: payment-app-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mydatabase
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    restart: always
+    container_name: payment-app-adminer
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:
