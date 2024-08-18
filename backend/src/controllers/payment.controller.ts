@@ -1,6 +1,6 @@
 // Controllers: https://docs.nestjs.com/controllers
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
-import { CreatePaymentDto, UpdatePaymentDto } from '../payments/payment.dto';
+import { CreatePaymentDto, UpdatePaymentDto } from '../dto/payment.dto';
 import { PaymentService } from '../services/payment.service';
 
 @Controller('payments')

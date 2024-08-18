@@ -1,30 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { CreateClientDto, UpdateClientDto } from '../client/client.dto';
-import { Client } from '../client/client.interface';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Client } from 'src/entities/client.entity';
+import { Repository } from 'typeorm';
+import { CreateClientDto, UpdateClientDto } from '../dto/client.dto';
 
 @Injectable()
 export class ClientService {
-    private clients: Client[] = []; // In-memory storage for simplicity, change once connecting postgres
+    constructor(
+        @InjectRepository(Client)
+        private clientsRepository: Repository<Client>,
+    ) { }
 
-    create(createClientDto: CreateClientDto): Client {
-        const newClient: Client = { id: Date.now(), ...createClientDto };
-        this.clients.push(newClient);
-        return newClient;
+    async create(createClientDto: CreateClientDto): Promise<Client> {
+        const newClient = this.clientsRepository.create(createClientDto);
+        return this.clientsRepository.save(newClient);
     }
 
-    getAll(): Client[] {
-        return this.clients;
+    async getAll(): Promise<Client[]> {
+        return this.clientsRepository.find();
     }
 
-    get(id: number): Client | undefined {
-        return this.clients.find(client => client.id === id);
+    async get(id: number): Promise<Client | null> {
+        return this.clientsRepository.findOneBy({ id });
     }
 
-    update(id: number, updateClientDto: UpdateClientDto): Client | null {
-        const clientIndex = this.clients.findIndex(client => client.id === id);
-        if (clientIndex === -1) return null;
-        this.clients[clientIndex] = { ...this.clients[clientIndex], ...updateClientDto };
-        return this.clients[clientIndex];
+    async update(id: number, updateClientDto: UpdateClientDto): Promise<Client | null> {
+        await this.clientsRepository.update(id, updateClientDto);
+        return this.get(id);
     }
 }
 

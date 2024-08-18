@@ -1,29 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePaymentDto, UpdatePaymentDto } from '../payments/payment.dto';
-import { Payment } from '../payments/payment.interface';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Payment } from 'src/entities/payment.entity';
+import { Repository } from 'typeorm';
+import { CreatePaymentDto, UpdatePaymentDto } from '../dto/payment.dto';
 
 @Injectable()
 export class PaymentService {
-    private payments: Payment[] = []; // In-memory storage for simplicity
+    constructor(
+        @InjectRepository(Payment)
+        private paymentsRepository: Repository<Payment>,
+    ) { }
 
-    create(createPaymentDto: CreatePaymentDto): Payment {
-        const newPayment: Payment = { id: Date.now(), status: 'Pending', ...createPaymentDto };
-        this.payments.push(newPayment);
-        return newPayment;
+    async create(createPaymentDto: CreatePaymentDto): Promise<Payment> {
+        const newPayment = this.paymentsRepository.create(createPaymentDto);
+        return this.paymentsRepository.save(newPayment);
     }
 
-    getAll(): Payment[] {
-        return this.payments;
+    async getAll(): Promise<Payment[]> {
+        return this.paymentsRepository.find();
     }
 
-    get(id: number): Payment | undefined {
-        return this.payments.find(payment => payment.id === id);
+    async get(id: number): Promise<Payment | null> {
+        return this.paymentsRepository.findOneBy({ id });
     }
 
-    update(id: number, updatePaymentDto: UpdatePaymentDto): Payment | null {
-        const paymentIndex = this.payments.findIndex(payment => payment.id === id);
-        if (paymentIndex === -1) return null;
-        this.payments[paymentIndex] = { ...this.payments[paymentIndex], ...updatePaymentDto };
-        return this.payments[paymentIndex];
+    async update(id: number, updatePaymentDto: UpdatePaymentDto): Promise<Payment | null> {
+        await this.paymentsRepository.update(id, updatePaymentDto);
+        return this.get(id);
     }
 }

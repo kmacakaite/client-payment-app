@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateClientDto, UpdateClientDto } from '../client/client.dto';
-import { Client } from '../client/client.interface';
+import { CreateClientDto, UpdateClientDto } from '../dto/client.dto';
+import { Client } from '../entities/client.entity';
 import { ClientService } from '../services/client.service';
 import { ClientController } from './client.controller';
 
@@ -33,7 +33,7 @@ describe('ClientController', () => {
             const createClientDto: CreateClientDto = { name: 'Karina Ma', address: '123 Street', phoneNumber: '1234567890' };
             const result: Client = { id: 1, ...createClientDto };
 
-            jest.spyOn(clientService, 'create').mockReturnValueOnce(result);
+            jest.spyOn(clientService, 'create').mockResolvedValue(result);
 
             expect(await clientController.create(createClientDto)).toBe(result);
             expect(clientService.create).toHaveBeenCalledWith(createClientDto);
@@ -43,7 +43,7 @@ describe('ClientController', () => {
     describe('get all clients', () => {
         it('should return an array of clients', async () => {
             const result: Client[] = [{ id: 1, name: 'Karina Ma', address: '123 Street', phoneNumber: '1234567890' }];
-            jest.spyOn(clientService, 'getAll').mockReturnValueOnce(result);
+            jest.spyOn(clientService, 'getAll').mockResolvedValue(result);
 
             expect(await clientController.getAll()).toBe(result);
         });
@@ -52,7 +52,7 @@ describe('ClientController', () => {
     describe('get client', () => {
         it('should return a single client by ID', async () => {
             const result: Client = { id: 1, name: 'Karina Ma', address: '123 Street', phoneNumber: '1234567890' };
-            jest.spyOn(clientService, 'get').mockReturnValueOnce(result);
+            jest.spyOn(clientService, 'get').mockResolvedValue(result);
 
             expect(await clientController.get('1')).toBe(result);
         });
@@ -63,7 +63,7 @@ describe('ClientController', () => {
             const updateClientDto: UpdateClientDto = { name: 'Karina Ma' };
             const result: Client = { id: 1, name: 'Karina Ma', address: '123 Street', phoneNumber: '1234567890' };
 
-            jest.spyOn(clientService, 'update').mockReturnValueOnce(result);
+            jest.spyOn(clientService, 'update').mockResolvedValue(result);
 
             expect(await clientController.update('1', updateClientDto)).toBe(result);
             expect(clientService.update).toHaveBeenCalledWith(1, updateClientDto);

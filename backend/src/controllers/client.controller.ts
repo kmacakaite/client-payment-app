@@ -1,6 +1,6 @@
 // Controllers: https://docs.nestjs.com/controllers
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
-import { CreateClientDto, UpdateClientDto } from '../client/client.dto';
+import { CreateClientDto, UpdateClientDto } from '../dto/client.dto';
 import { ClientService } from '../services/client.service';
 
 @Controller('client')

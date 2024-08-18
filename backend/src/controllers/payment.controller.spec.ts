@@ -1,16 +1,35 @@
-import { CreatePaymentDto, UpdatePaymentDto } from '../payments/payment.dto';
-import { Payment } from '../payments/payment.interface';
+import { Test, TestingModule } from '@nestjs/testing';
+import { CreatePaymentDto, UpdatePaymentDto } from '../dto/payment.dto';
+import { Payment } from '../entities/payment.entity';
 import { PaymentService } from '../services/payment.service';
+import { PaymentController } from './payment.controller';
 
-describe('PaymentService', () => {
+describe('PaymentController', () => {
+    let paymentController: PaymentController;
     let paymentService: PaymentService;
 
-    beforeEach(() => {
-        paymentService = new PaymentService();
+    beforeEach(async () => {
+        const module: TestingModule = await Test.createTestingModule({
+            controllers: [PaymentController],
+            providers: [
+                {
+                    provide: PaymentService,
+                    useValue: {
+                        create: jest.fn(),
+                        getAll: jest.fn(),
+                        get: jest.fn(),
+                        update: jest.fn(),
+                    },
+                },
+            ],
+        }).compile();
+
+        paymentController = module.get<PaymentController>(PaymentController);
+        paymentService = module.get<PaymentService>(PaymentService);
     });
 
     describe('create', () => {
-        it('should create and return a new payment', () => {
+        it('should create and return a new payment', async () => {
             const createPaymentDto: CreatePaymentDto = {
                 clientId: 1,
                 amount: 100,
@@ -20,34 +39,26 @@ describe('PaymentService', () => {
                 notes: 'Payment for services',
             };
 
-            const result = paymentService.create(createPaymentDto);
+            const result: Payment = { id: 1, status: 'Pending', ...createPaymentDto };
 
-            // Assert that the result has the expected structure
-            expect(result).toHaveProperty('id');
-            expect(result).toMatchObject({
-                clientId: 1,
-                amount: 100,
-                recipientName: 'Marina',
-                recipientBankName: 'Another Amazing bank',
-                recipientAccountNumber: '123456789',
-                notes: 'Payment for services',
-                status: 'Pending',
-            });
+            jest.spyOn(paymentService, 'create').mockResolvedValue(result);
 
-            // Check that the payment was added to the payments array
-            expect(paymentService.getAll()).toContain(result);
+            expect(await paymentController.create(createPaymentDto)).toBe(result);
+            expect(paymentService.create).toHaveBeenCalledWith(createPaymentDto);
         });
     });
 
     describe('getAll', () => {
-        it('should return all payments', () => {
-            const payments: Payment[] = paymentService.getAll();
-            expect(payments).toBeInstanceOf(Array);
+        it('should return all payments', async () => {
+            const payments: Payment[] = [{ id: 1, status: 'Pending', clientId: 1, amount: 100, recipientName: 'Marina', recipientBankName: 'Another Amazing bank', recipientAccountNumber: '123456789' }];
+            jest.spyOn(paymentService, 'getAll').mockResolvedValue(payments);
+
+            expect(await paymentController.getAll()).toBe(payments);
         });
     });
 
     describe('get', () => {
-        it('should return a payment by id', () => {
+        it('should return a payment by id', async () => {
             const createPaymentDto: CreatePaymentDto = {
                 clientId: 2,
                 amount: 200,
@@ -57,21 +68,21 @@ describe('PaymentService', () => {
                 notes: 'Test payment',
             };
 
-            const newPayment = paymentService.create(createPaymentDto);
+            const newPayment: Payment = { id: 1, status: 'Pending', ...createPaymentDto };
+            jest.spyOn(paymentService, 'get').mockResolvedValue(newPayment);
 
-            const foundPayment = paymentService.get(newPayment.id);
-
-            expect(foundPayment).toEqual(newPayment);
+            expect(await paymentController.get('1')).toBe(newPayment);
         });
 
-        it('should return undefined if payment not found', () => {
-            const payment = paymentService.get(999);
-            expect(payment).toBeUndefined();
+        it('should return undefined if payment not found', async () => {
+            jest.spyOn(paymentService, 'get').mockResolvedValue(null);
+
+            expect(await paymentController.get('999')).toBeUndefined();
         });
     });
 
     describe('update', () => {
-        it('should update an existing payment and return it', () => {
+        it('should update an existing payment and return it', async () => {
             const createPaymentDto: CreatePaymentDto = {
                 clientId: 3,
                 amount: 300,
@@ -81,25 +92,18 @@ describe('PaymentService', () => {
                 notes: 'Test payment update',
             };
 
-            const newPayment = paymentService.create(createPaymentDto);
+            const newPayment: Payment = { id: 1, status: 'Pending', ...createPaymentDto };
+            const updatePaymentDto: UpdatePaymentDto = { status: 'Approved' };
 
-            const updatePaymentDto: UpdatePaymentDto = {
-                status: 'Approved',
-            };
+            jest.spyOn(paymentService, 'update').mockResolvedValue({ ...newPayment, ...updatePaymentDto });
 
-            const updatedPayment = paymentService.update(newPayment.id, updatePaymentDto);
-
-            expect(updatedPayment).toEqual({
-                ...newPayment,
-                status: 'Approved',
-            });
+            expect(await paymentController.update('1', updatePaymentDto)).toEqual({ ...newPayment, ...updatePaymentDto });
         });
 
-        it('should return null if payment to update is not found', () => {
-            const updatePaymentDto: UpdatePaymentDto = { status: 'Failed' };
-            const updatedPayment = paymentService.update(999, updatePaymentDto);
+        it('should return null if payment to update is not found', async () => {
+            jest.spyOn(paymentService, 'update').mockResolvedValue(null);
 
-            expect(updatedPayment).toBeNull();
+            expect(await paymentController.update('999', { status: 'Failed' })).toBeNull();
         });
     });
 });
