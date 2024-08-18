@@ -1,6 +1,5 @@
-// References:
-// TypeORM Entity Docs: https://typeorm.io/entities
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm';
+import { Payment } from './payment.entity'; // Use type reference
 
 @Entity()
 export class Client {
@@ -18,5 +17,7 @@ export class Client {
 
     @Column({ nullable: true })
     bankAccountNumber?: string;
-}
 
+    @OneToMany(() => Payment, (payment) => payment.client)
+    payments: Relation<Payment[]>;
+}

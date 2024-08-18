@@ -1,8 +1,10 @@
+// References:
+// Services and Providers: https://docs.nestjs.com/providers
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Client } from 'src/entities/client.entity';
 import { Repository } from 'typeorm';
 import { CreateClientDto, UpdateClientDto } from '../dto/client.dto';
+import { Client } from '../entities/client.entity';
 
 @Injectable()
 export class ClientService {
@@ -30,5 +32,3 @@ export class ClientService {
     }
 }
 
-// References:
-// Services and Providers: https://docs.nestjs.com/providers

@@ -1,14 +1,13 @@
-// References:
-// TypeORM Entity Docs: https://typeorm.io/entities
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
+import { Client } from './client.entity'; // Use type reference
 
 @Entity()
 export class Payment {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  clientId: number;
+  @ManyToOne(() => Client, (client) => client.payments, { onDelete: 'CASCADE' })
+  client: Relation<Client>;
 
   @Column()
   amount: number;

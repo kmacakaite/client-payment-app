@@ -1,31 +1,63 @@
-import { Injectable } from '@nestjs/common';
+// References:
+// Services and Providers: https://docs.nestjs.com/providers
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Payment } from 'src/entities/payment.entity';
 import { Repository } from 'typeorm';
 import { CreatePaymentDto, UpdatePaymentDto } from '../dto/payment.dto';
+import { Client } from '../entities/client.entity';
+import { Payment } from '../entities/payment.entity';
 
 @Injectable()
 export class PaymentService {
     constructor(
         @InjectRepository(Payment)
-        private paymentsRepository: Repository<Payment>,
+        private paymentRepository: Repository<Payment>,
+        @InjectRepository(Client)
+        private readonly clientRepository: Repository<Client>,
     ) { }
 
     async create(createPaymentDto: CreatePaymentDto): Promise<Payment> {
-        const newPayment = this.paymentsRepository.create(createPaymentDto);
-        return this.paymentsRepository.save(newPayment);
+        const { clientId, ...paymentData } = createPaymentDto;
+
+        // Validate if the client exists
+        const client = await this.clientRepository.findOneBy({ id: clientId });
+        if (!client) {
+            throw new NotFoundException(`Client with ID ${clientId} not found`);
+        }
+
+        const payment = this.paymentRepository.create({
+            ...paymentData,
+            client,
+        });
+
+        return this.paymentRepository.save(payment);
     }
 
     async getAll(): Promise<Payment[]> {
-        return this.paymentsRepository.find();
+        return this.paymentRepository.find({ relations: ['client'] })
     }
 
     async get(id: number): Promise<Payment | null> {
-        return this.paymentsRepository.findOneBy({ id });
+        const payment = await this.paymentRepository.findOne({
+            where: { id },
+            relations: ['client'],
+        });
+        if (!payment) {
+            throw new NotFoundException(`Payment with ID ${id} not found`);
+        }
+        return payment;
     }
 
     async update(id: number, updatePaymentDto: UpdatePaymentDto): Promise<Payment | null> {
-        await this.paymentsRepository.update(id, updatePaymentDto);
-        return this.get(id);
+        const payment = await this.paymentRepository.preload({
+            id,
+            ...updatePaymentDto,
+        });
+
+        if (!payment) {
+            throw new NotFoundException(`Payment with ID ${id} not found`);
+        }
+
+        return this.paymentRepository.save(payment)
     }
 }

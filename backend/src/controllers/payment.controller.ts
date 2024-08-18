@@ -5,26 +5,26 @@ import { PaymentService } from '../services/payment.service';
 
 @Controller('payments')
 export class PaymentController {
-    constructor(private readonly paymentsService: PaymentService) { }
+    constructor(private readonly paymentService: PaymentService) { }
 
     @Post()
     create(@Body() createPaymentDto: CreatePaymentDto) {
-        return this.paymentsService.create(createPaymentDto);
+        return this.paymentService.create(createPaymentDto);
     }
 
     @Get()
     getAll() {
-        return this.paymentsService.getAll();
+        return this.paymentService.getAll();
     }
 
     @Get(':id')
     get(@Param('id') id: string) {
-        return this.paymentsService.get(+id);
+        return this.paymentService.get(+id);
     }
 
     @Put(':id')
     update(@Param('id') id: string, @Body() updatePaymentDto: UpdatePaymentDto) {
-        return this.paymentsService.update(+id, updatePaymentDto);
+        return this.paymentService.update(+id, updatePaymentDto);
     }
 }
 
