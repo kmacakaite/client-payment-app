@@ -1,6 +1,6 @@
-import { CreatePaymentDto, UpdatePaymentDto } from './payment.dto';
-import { Payment } from './payment.interface';
-import { PaymentService } from './payment.service';
+import { CreatePaymentDto, UpdatePaymentDto } from '../payments/payment.dto';
+import { Payment } from '../payments/payment.interface';
+import { PaymentService } from '../services/payment.service';
 
 describe('PaymentService', () => {
     let paymentService: PaymentService;

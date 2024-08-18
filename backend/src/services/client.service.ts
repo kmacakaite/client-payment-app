@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateClientDto, UpdateClientDto } from './client.dto';
-import { Client } from './client.interface';
+import { CreateClientDto, UpdateClientDto } from '../client/client.dto';
+import { Client } from '../client/client.interface';
 
 @Injectable()
 export class ClientService {

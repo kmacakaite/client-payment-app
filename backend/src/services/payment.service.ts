@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePaymentDto, UpdatePaymentDto } from './payment.dto';
-import { Payment } from './payment.interface';
+import { CreatePaymentDto, UpdatePaymentDto } from '../payments/payment.dto';
+import { Payment } from '../payments/payment.interface';
 
 @Injectable()
 export class PaymentService {

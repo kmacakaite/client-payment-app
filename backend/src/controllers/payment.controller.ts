@@ -1,10 +1,10 @@
 // Controllers: https://docs.nestjs.com/controllers
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
-import { CreatePaymentDto, UpdatePaymentDto } from './payment.dto';
-import { PaymentService } from './payment.service';
+import { CreatePaymentDto, UpdatePaymentDto } from '../payments/payment.dto';
+import { PaymentService } from '../services/payment.service';
 
 @Controller('payments')
-export class PaymentsController {
+export class PaymentController {
     constructor(private readonly paymentsService: PaymentService) { }
 
     @Post()

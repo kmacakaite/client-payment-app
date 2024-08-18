@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { CreateClientDto, UpdateClientDto } from '../client/client.dto';
+import { Client } from '../client/client.interface';
+import { ClientService } from '../services/client.service';
 import { ClientController } from './client.controller';
-import { CreateClientDto, UpdateClientDto } from './client.dto';
-import { Client } from './client.interface';
-import { ClientService } from './client.service';
 
 describe('ClientController', () => {
     let clientController: ClientController;
