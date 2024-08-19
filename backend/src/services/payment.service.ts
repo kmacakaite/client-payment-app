@@ -33,8 +33,8 @@ export class PaymentService {
         return this.paymentRepository.save(payment);
     }
 
-    async getAll(): Promise<Payment[]> {
-        return this.paymentRepository.find({ relations: ['client'] })
+    async getAll(): Promise<Payment[] | []> {
+        return this.paymentRepository.find({ relations: ['client'] }) ?? []
     }
 
     async get(id: number): Promise<Payment | null> {

@@ -20,7 +20,6 @@ export const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
     value,
     onChange,
     onSelect,
-    type = 'text',
     error,
     options = [],
     required = false
@@ -31,7 +30,6 @@ export const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
             label={label}
             value={value}
             onChange={onChange}
-            type={type}
             variant="outlined"
             fullWidth
             required={required}
@@ -61,7 +59,7 @@ export const FormFieldComponent: React.FC<FormFieldComponentProps> = ({
 
     return (
         <FormControl fullWidth error={!!error}>
-            {options ? renderSelect() : renderTextField()}
+            {options.length ? renderSelect() : renderTextField()}
             {error && <FormHelperText>{error}</FormHelperText>}
         </FormControl>
     );

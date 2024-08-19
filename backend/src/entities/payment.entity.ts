@@ -9,7 +9,7 @@ export class Payment {
   @ManyToOne(() => Client, (client) => client.payments, { onDelete: 'CASCADE' })
   client: Relation<Client>;
 
-  @Column()
+  @Column({ type: 'float' })
   amount: number;
 
   @Column()

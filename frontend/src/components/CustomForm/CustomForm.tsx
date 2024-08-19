@@ -8,7 +8,6 @@ type FormField = {
     value: string | number;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onSelect?: (e: SelectChangeEvent<number | string>) => void;
-    type?: string;
     error?: string;
     options?: { value: number; label: string }[];
     required?: boolean;
@@ -57,7 +56,6 @@ export const CustomForm: React.FC<FormProps> = ({ fields, onSubmit }) => {
                         value={field.value}
                         onChange={field.onChange}
                         onSelect={field.onSelect}
-                        type={field.type}
                         error={errors[field.name]}
                         options={field.options}
                         required={field.required}
