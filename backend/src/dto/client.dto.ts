@@ -2,15 +2,15 @@
 
 // Separating logic for creation and updating individual fields
 export class CreateClientDto {
-    name: string;
-    address: string;
-    phoneNumber: string;
-    bankAccountNumber?: number;
+  name: string;
+  address: string;
+  phoneNumber: string;
+  bankAccountNumber?: number;
 }
 
 export class UpdateClientDto {
-    name?: string;
-    address?: string;
-    phoneNumber?: string;
-    bankAccountNumber?: number;
+  name?: string;
+  address?: string;
+  phoneNumber?: string;
+  bankAccountNumber?: number;
 }

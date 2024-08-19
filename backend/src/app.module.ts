@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
+import { DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USERNAME } from './config';
 import { ClientController } from './controllers/client.controller';
 import { PaymentController } from './controllers/payment.controller';
 import { Client } from './entities/client.entity';
@@ -12,11 +13,11 @@ import { PaymentService } from './services/payment.service';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'postgres',
-      database: 'mydatabase',
+      host: DB_HOST,
+      port: DB_PORT ?? 5432,
+      username: DB_USERNAME,
+      password: DB_PASSWORD,
+      database: DB_NAME,
       entities: [Client, Payment],
       synchronize: true,
     }),
@@ -26,4 +27,4 @@ import { PaymentService } from './services/payment.service';
   controllers: [ClientController, PaymentController],
   providers: [ClientService, PaymentService],
 })
-export class AppModule {}
+export class AppModule { }
