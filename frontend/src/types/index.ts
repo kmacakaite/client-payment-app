@@ -3,7 +3,7 @@ export interface Client {
     name: string;
     address: string;
     phoneNumber: string;
-    bankAccountNumber?: string;
+    bankAccountNumber?: number;
 }
 
 export interface Payment {

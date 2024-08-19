@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { createClient, fetchClients, updateClient } from '../api/api';
-import { ClientForm } from '../components/Clients/Form/ClientForm';
-import ClientList from '../components/Clients/List/ClientsList';
-import ClientEditModal from '../components/Clients/Modal/ClientEditModal';
+import { ClientForm } from '../components/Client/Form/ClientForm';
+import { ClientList } from '../components/Client/List/ClientsList';
+import { ClientEditModal } from '../components/Client/Modal/ClientEditModal';
 import { Client } from '../types';
 
 // This component contains all business logic
@@ -20,13 +20,17 @@ export const ClientsPage: React.FC = () => {
         }
     };
 
-    const handleSaveClient = async (clientData: Client) => {
+    const handleCreateClient = async (clientData: Omit<Client, 'id'>) => {
         try {
-            if (clientData.id) {
-                await updateClient(clientData.id, clientData);
-            } else {
-                await createClient(clientData);
-            }
+            await createClient(clientData);
+            loadClients();
+        } catch (error) {
+            console.error('Failed to create client', error);
+        }
+    }
+    const handleUpdateClient = async (clientData: Client) => {
+        try {
+            await updateClient(clientData.id, clientData);
             loadClients();
         } catch (error) {
             console.error('Failed to save client', error);
@@ -40,7 +44,7 @@ export const ClientsPage: React.FC = () => {
     return (
         <div>
             <h1>Clients</h1>
-            <ClientForm onSave={handleSaveClient} />
+            <ClientForm onSave={handleCreateClient} />
             <ClientList clients={clients} onEdit={
                 (client: Client) => {
                 setEditingClient(client);
@@ -50,7 +54,7 @@ export const ClientsPage: React.FC = () => {
                 <ClientEditModal
                     open={isEditModalOpen}
                     client={editingClient}
-                    onSave={handleSaveClient}
+                    onSave={handleUpdateClient}
                     onClose={() => {
                         setEditModalOpen(false);
                         setEditingClient(null);

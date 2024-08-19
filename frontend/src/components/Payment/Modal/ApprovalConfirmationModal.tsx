@@ -1,4 +1,3 @@
-// frontend/src/components/ConfirmationModal/ConfirmationModal.tsx
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import React from 'react';
 
@@ -9,7 +8,7 @@ interface ConfirmationModalProps {
     message: string;
 }
 
-const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ open, onClose, onConfirm, message }) => {
+export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ open, onClose, onConfirm, message }) => {
     return (
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>Confirm Action</DialogTitle>
@@ -29,5 +28,3 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ open, onClose, on
         </Dialog>
     );
 };
-
-export default ConfirmationModal;

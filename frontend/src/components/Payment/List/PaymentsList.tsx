@@ -1,4 +1,3 @@
-// frontend/src/components/Payments/List/PaymentsList.tsx
 import { Button } from '@mui/material';
 import React from 'react';
 import { Payment } from '../../../types';
@@ -9,7 +8,7 @@ interface PaymentListProps {
   onApprove: (payment: Payment) => void;
 }
 
-const PaymentsList: React.FC<PaymentListProps> = ({ payments, onApprove }) => {
+export const PaymentsList: React.FC<PaymentListProps> = ({ payments, onApprove }) => {
   // Define column configurations
   const columns: ColumnConfig<Payment>[] = [
     { header: 'Client', render: payment => payment.client?.name || 'N/A' }, 
@@ -39,5 +38,3 @@ const PaymentsList: React.FC<PaymentListProps> = ({ payments, onApprove }) => {
     />
   );
 };
-
-export default PaymentsList;

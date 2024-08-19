@@ -2,7 +2,7 @@ import { Button, Grid, SelectChangeEvent } from '@mui/material';
 import React, { useState } from 'react';
 import { FormFieldComponent } from './FormField';
 
-type FormField = {
+interface FormField {
     name: string;
     label: string;
     value: string | number;
@@ -14,7 +14,7 @@ type FormField = {
     validation?: { message: string; validationFormat: string }; // Format: regex pattern as a string
 }
 
-type FormProps = {
+interface FormProps {
     fields: FormField[];
     onSubmit: () => void;
 }

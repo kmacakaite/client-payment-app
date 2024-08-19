@@ -1,10 +1,9 @@
-// frontend/src/pages/PaymentsPage.tsx
 import React, { useEffect, useState } from 'react';
 import { createPayment, fetchClients, fetchPayments, updatePayment } from '../api/api';
-import PaymentForm from '../components/Payments/Form/PaymentForm';
-import PaymentsList from '../components/Payments/List/PaymentsList';
+import { PaymentForm } from '../components/Payment/Form/PaymentForm';
+import { PaymentsList } from '../components/Payment/List/PaymentsList';
+import { ConfirmationModal } from '../components/Payment/Modal/ApprovalConfirmationModal';
 import { Client, Payment } from '../types';
-import ConfirmationModal from '../components/Payments/Modal/ApprovalConfirmationModal';
 
 interface CreatePaymentDto {
     clientId: number;
@@ -15,7 +14,7 @@ interface CreatePaymentDto {
     notes?: string;
 }
 
-const PaymentsPage: React.FC = () => {
+export const PaymentsPage: React.FC = () => {
     const [payments, setPayments] = useState<Payment[]>([]);
     const [clients, setClients] = useState<Client[]>([]);
     const [refreshFlag, setRefreshFlag] = useState(false);
@@ -59,7 +58,7 @@ const PaymentsPage: React.FC = () => {
         if (selectedPayment) {
             try {
                 await updatePayment(selectedPayment.id, { ...selectedPayment, status: 'Approved' });
-                setRefreshFlag(prev => !prev); // Refresh payments list
+                setRefreshFlag(prev => !prev);
             } catch (error) {
                 console.error('Failed to approve payment', error);
             }
@@ -85,5 +84,3 @@ const PaymentsPage: React.FC = () => {
         </div>
     );
 };
-
-export default PaymentsPage;

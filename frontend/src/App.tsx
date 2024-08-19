@@ -3,7 +3,7 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { NavigationMenu } from './components/NavigationMenu/NavigationMenu';
 import { ClientsPage } from './pages/ClientsPage';
 import { HomePage } from './pages/HomePage';
-import PaymentsPage from './pages/PaymentsPage';
+import { PaymentsPage } from './pages/PaymentsPage';
 
 export const App: React.FC = () => 
     <Router>

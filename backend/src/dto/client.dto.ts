@@ -5,12 +5,12 @@ export class CreateClientDto {
     name: string;
     address: string;
     phoneNumber: string;
-    bankAccountNumber?: string;
+    bankAccountNumber?: number;
 }
 
 export class UpdateClientDto {
     name?: string;
     address?: string;
     phoneNumber?: string;
-    bankAccountNumber?: string;
+    bankAccountNumber?: number;
 }

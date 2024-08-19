@@ -1,8 +1,7 @@
-// frontend/src/components/CustomForm/FormField.tsx
 import { FormControl, FormHelperText, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import React from 'react';
 
-type FormFieldComponentProps = {
+interface FormFieldComponentProps {
     name: string;
     label: string;
     value: string | number | undefined;

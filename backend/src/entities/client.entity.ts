@@ -16,7 +16,7 @@ export class Client {
     phoneNumber: string;
 
     @Column({ nullable: true })
-    bankAccountNumber?: string;
+    bankAccountNumber?: number;
 
     @OneToMany(() => Payment, (payment) => payment.client)
     payments: Relation<Payment[]>;

@@ -1,13 +1,13 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import React from 'react';
 
-export type ColumnConfig<T> = {
+export interface ColumnConfig<T> {
   header: string;
   field?: keyof T;
   render?: (item: T) => React.ReactNode;
 };
 
-type CustomTableProps<T> = {
+interface CustomTableProps<T> {
   columns: ColumnConfig<T>[];
   items: T[];
 };

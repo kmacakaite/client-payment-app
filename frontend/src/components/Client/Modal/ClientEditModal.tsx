@@ -9,7 +9,7 @@ interface ClientEditModalProps {
     onSave: (clientData: Client) => void;
 }
 
-const ClientEditModal: React.FC<ClientEditModalProps> = ({ open, client, onClose, onSave }) => {
+export const ClientEditModal: React.FC<ClientEditModalProps> = ({ open, client, onClose, onSave }) => {
     const [formData, setFormData] = useState<Client | null>(client);
 
     useEffect(() => {
@@ -64,8 +64,6 @@ const ClientEditModal: React.FC<ClientEditModalProps> = ({ open, client, onClose
         </Dialog>
     );
 };
-
-export default ClientEditModal;
 
 interface FormTextFieldProps {
     name: string;

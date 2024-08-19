@@ -8,7 +8,7 @@ interface ClientListProps {
   onEdit: (client: Client) => void;
 }
 
-const ClientList: React.FC<ClientListProps> = ({ clients, onEdit }) => {
+export const ClientList: React.FC<ClientListProps> = ({ clients, onEdit }) => {
   const columns: ColumnConfig<Client>[] = [
     { header: 'Name', field: 'name' },
     { header: 'Address', field: 'address' },
@@ -35,5 +35,3 @@ const ClientList: React.FC<ClientListProps> = ({ clients, onEdit }) => {
     />
   );
 };
-
-export default ClientList;
