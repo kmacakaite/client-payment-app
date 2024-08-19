@@ -11,6 +11,7 @@ import { PaymentService } from './services/payment.service';
 
 @Module({
   imports: [
+    // Configure TypeORM with PostgreSQL database
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: DB_HOST,
@@ -21,10 +22,13 @@ import { PaymentService } from './services/payment.service';
       entities: [Client, Payment],
       synchronize: true,
     }),
+    // Register entities for dependency injection
     TypeOrmModule.forFeature([Client, Payment]),
     AuthModule,
   ],
+  // Register controller
   controllers: [ClientController, PaymentController],
+  // Register services
   providers: [ClientService, PaymentService],
 })
 export class AppModule { }

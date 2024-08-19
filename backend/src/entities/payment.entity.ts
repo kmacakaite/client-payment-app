@@ -5,8 +5,7 @@ import {
   PrimaryGeneratedColumn,
   Relation,
 } from 'typeorm';
-import { Client } from './client.entity'; // Use type reference
-
+import { Client } from './client.entity';
 @Entity()
 export class Payment {
   @PrimaryGeneratedColumn()

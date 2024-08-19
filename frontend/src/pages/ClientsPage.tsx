@@ -4,8 +4,9 @@ import { ClientForm } from '../components/Client/Form/ClientForm';
 import { ClientList } from '../components/Client/List/ClientsList';
 import { ClientEditModal } from '../components/Client/Modal/ClientEditModal';
 import { Client } from '../types';
+import { Grid } from '@mui/material';
 
-// This component contains all business logic
+// This component contains all business logic for client
 export const ClientsPage: React.FC = () => {
     const [clients, setClients] = useState<Client[]>([]);
     const [editingClient, setEditingClient] = useState<Client | null>(null);
@@ -44,12 +45,20 @@ export const ClientsPage: React.FC = () => {
     return (
         <div>
             <h1>Clients</h1>
-            <ClientForm onSave={handleCreateClient} />
-            <ClientList clients={clients} onEdit={
-                (client: Client) => {
-                setEditingClient(client);
-                setEditModalOpen(true);
-            }} />
+            <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <ClientForm onSave={handleCreateClient} />
+                </Grid>
+                <Grid item xs={12}>
+                    <ClientList
+                        clients={clients}
+                        onEdit={(client: Client) => {
+                            setEditingClient(client);
+                            setEditModalOpen(true);
+                        }}
+                    />
+                </Grid>
+            </Grid>
             {editingClient && (
                 <ClientEditModal
                     open={isEditModalOpen}

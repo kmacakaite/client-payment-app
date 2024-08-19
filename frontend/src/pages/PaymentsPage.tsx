@@ -1,3 +1,4 @@
+import { Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { createPayment, fetchClients, fetchPayments, updatePayment } from '../api/api';
 import { PaymentForm } from '../components/Payment/Form/PaymentForm';
@@ -14,6 +15,7 @@ interface CreatePaymentDto {
     notes?: string;
 }
 
+// This component contains all business logic for payments
 export const PaymentsPage: React.FC = () => {
     const [payments, setPayments] = useState<Payment[]>([]);
     const [clients, setClients] = useState<Client[]>([]);
@@ -22,6 +24,7 @@ export const PaymentsPage: React.FC = () => {
     const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    // Fetches and updates payment data
     const loadPayments = async () => {
         try {
             const response = await fetchPayments();
@@ -43,12 +46,14 @@ export const PaymentsPage: React.FC = () => {
     const handleSavePayment = async (paymentData: CreatePaymentDto) => {
         try {
             await createPayment(paymentData);
-            setRefreshFlag(prev => !prev); // Trigger a refresh of the payments list
+            // Trigger a refresh of the payments list
+            setRefreshFlag(prev => !prev);
         } catch (error) {
             console.error('Failed to create payment', error);
         }
     };
 
+    // Opens the approval modal for a selected payment
     const handleApprovePayment = (payment: Payment) => {
         setSelectedPayment(payment);
         setIsModalOpen(true);
@@ -65,6 +70,7 @@ export const PaymentsPage: React.FC = () => {
         }
     };
 
+    // refresh data after each action create/update
     useEffect(() => {
         loadPayments();
         loadClients();
@@ -73,8 +79,14 @@ export const PaymentsPage: React.FC = () => {
     return (
         <div>
             <h1>Payments</h1>
-            <PaymentForm clients={clients} onSave={handleSavePayment} />
-            <PaymentsList payments={payments} onApprove={handleApprovePayment} />
+            <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <PaymentForm clients={clients} onSave={handleSavePayment} />
+                </Grid>
+                <Grid item xs={12}>
+                    <PaymentsList payments={payments} onApprove={handleApprovePayment} />
+                </Grid>
+            </Grid>
             <ConfirmationModal
                 open={isModalOpen}
                 onClose={() => setIsModalOpen(false)}

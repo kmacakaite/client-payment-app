@@ -9,7 +9,6 @@ interface PaymentListProps {
 }
 
 export const PaymentsList: React.FC<PaymentListProps> = ({ payments, onApprove }) => {
-  // Define column configurations
   const columns: ColumnConfig<Payment>[] = [
     { header: 'Client', render: payment => payment.client?.name || 'N/A' }, 
     { header: 'Amount', field: 'amount' }, 
