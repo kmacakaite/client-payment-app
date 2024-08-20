@@ -21,11 +21,7 @@ export const getPaymentFormFields = (
             value: formData.clientId,
             onSelect: handleClientChange,
             options: clients.map(client => ({ value: client.id, label: client.name })),
-            required: true,
-            validation: {
-                message: 'Client selection is required',
-                validationFormat: '^\\d+$'
-            }
+            required: true
         },
         {
             name: 'amount',
@@ -44,33 +40,21 @@ export const getPaymentFormFields = (
             label: 'Recipient Name',
             value: formData.recipientName,
             onChange: handleChange,
-            required: true,
-            validation: {
-                message: 'Recipient Name is required',
-                validationFormat: '^(?!\\s*$).+'
-            }
+            required: true
         },
         {
             name: 'recipientBankName',
             label: 'Recipient Bank Name',
             value: formData.recipientBankName,
             onChange: handleChange,
-            required: true,
-            validation: {
-                message: 'Recipient Bank Name is required',
-                validationFormat: '^(?!\\s*$).+'
-            }
+            required: true
         },
         {
             name: 'recipientAccountNumber',
             label: 'Recipient Account Number',
             value: formData.recipientAccountNumber,
             onChange: handleChange,
-            required: true,
-            validation: {
-                message: 'Recipient Account Number is required',
-                validationFormat: '^(?!\\s*$).+'
-            }
+            required: true
         },
         {
             name: 'notes',
