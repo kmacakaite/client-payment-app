@@ -1,7 +1,7 @@
 import { SelectChangeEvent } from '@mui/material';
 import React, { useState } from 'react';
+import { DEFAULT_PAYMENT_FORM_DATA } from '../../../lib/constants';
 import { Client } from '../../../types';
-import { DEFAULT_PAYMENT_FORM_DATA } from '../../../utils/constants';
 import { CustomForm } from '../../CustomForm/CustomForm';
 import { CreatePaymentDto, getPaymentFormFields } from './getPaymentFormFields';
 

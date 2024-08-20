@@ -1,13 +1,13 @@
+import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
+import { AuthGuard } from '../auth/auth.guard';
+import { AuthService } from '../auth/auth.service';
 import { UpdatePaymentDto } from '../dto/payment.dto';
 import { Payment } from '../entities/payment.entity';
 import { clientFixture } from '../fixtures/client.fixture';
 import { createPaymentDto, payments } from '../fixtures/payment.fixture';
 import { PaymentService } from '../services/payment.service';
 import { PaymentController } from './payment.controller';
-import { AuthGuard } from '../auth/auth.guard';
-import { Reflector } from '@nestjs/core';
-import { AuthService } from '../auth/auth.service';
 
 // Mock implementations
 class MockAuthGuard {
@@ -18,7 +18,7 @@ class MockAuthGuard {
 
 class MockAuthService {
   validateToken(token: string): boolean {
-    return token === 'your-secret-token'; 
+    return token === 'your-secret-token';
   }
 }
 

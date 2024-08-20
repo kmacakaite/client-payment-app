@@ -4,7 +4,7 @@ import { AUTH_TOKEN } from 'src/config';
 
 @Injectable()
 export class AuthService {
-  private readonly validToken = AUTH_TOKEN
+  private readonly validToken = AUTH_TOKEN;
 
   validateToken(token: string): boolean {
     return token === this.validToken;

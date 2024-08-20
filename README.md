@@ -34,6 +34,7 @@ This application is a simple client and payment management system built using Re
 6. Navigate to the `frontend` directory
 7. Install dependencies: `npm install`
 8. Start the development server: `npm start`
+9. Navigate to http://localhost:3000
 
 ## API Endpoints
 - **POST /client**: Create a new client.

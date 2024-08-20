@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import { DEFAULT_CLIENT_FORM_DATA } from '../../../lib/constants';
 import { Client } from '../../../types';
 import { CustomForm } from '../../CustomForm/CustomForm';
 import { getClientFormFields } from './getClientFormFields';
-import { DEFAULT_CLIENT_FORM_DATA } from '../../../utils/constants';
 
 interface ClientFormProps {
     onSave: (clientData: Omit<Client, 'id'>) => void;

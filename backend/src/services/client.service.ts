@@ -1,6 +1,6 @@
 // References:
 // Services and Providers: https://docs.nestjs.com/providers
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateClientDto, UpdateClientDto } from '../dto/client.dto';
@@ -14,8 +14,7 @@ export class ClientService {
   ) {}
 
   async create(createClientDto: CreateClientDto): Promise<Client> {
-    const newClient = this.clientsRepository.create(createClientDto);
-    return this.clientsRepository.save(newClient);
+    return this.clientsRepository.save(createClientDto);
   }
 
   async getAll(): Promise<Client[] | []> {
@@ -23,14 +22,26 @@ export class ClientService {
   }
 
   async get(id: number): Promise<Client | null> {
-    return this.clientsRepository.findOneBy({ id });
+    const client = await this.clientsRepository.findOneBy({ id });
+    if (!client) {
+      throw new NotFoundException(`Client with ID ${id} not found`);
+    }
+    return client;
   }
 
   async update(
     id: number,
     updateClientDto: UpdateClientDto,
   ): Promise<Client | null> {
-    await this.clientsRepository.update(id, updateClientDto);
-    return this.get(id);
+    const client = await this.clientsRepository.preload({
+      id,
+      ...updateClientDto,
+    });
+
+    if (!client) {
+      throw new NotFoundException(`Client with ID ${id} not found`);
+    }
+
+    return this.clientsRepository.save(client);
   }
 }
