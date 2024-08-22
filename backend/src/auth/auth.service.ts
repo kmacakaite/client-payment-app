@@ -1,6 +1,6 @@
 // https://docs.nestjs.com/recipes/passport
-import { Injectable } from '@nestjs/common';
-import { AUTH_TOKEN } from 'src/config';
+import { Injectable } from "@nestjs/common";
+import { AUTH_TOKEN } from "src/config";
 
 @Injectable()
 export class AuthService {

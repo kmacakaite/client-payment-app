@@ -1,23 +1,31 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import React from 'react';
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material';
+import { ReactNode } from 'react';
 
 export interface ColumnConfig<T> {
   header: string;
   field?: keyof T;
-  render?: (item: T) => React.ReactNode;
-};
+  render?: (item: T) => ReactNode;
+}
 
 interface CustomTableProps<T> {
   columns: ColumnConfig<T>[];
   items: T[];
-};
+}
 
 export const CustomTable = <T,>({ columns, items }: CustomTableProps<T>) => (
   <TableContainer component={Paper}>
     <Table>
       <TableHead>
         <TableRow>
-          {columns.map(column => (
+          {columns.map((column) => (
             <TableCell key={column.header}>{column.header}</TableCell>
           ))}
         </TableRow>
@@ -25,9 +33,13 @@ export const CustomTable = <T,>({ columns, items }: CustomTableProps<T>) => (
       <TableBody>
         {items.map((item, index) => (
           <TableRow key={index}>
-            {columns.map(column => (
+            {columns.map((column) => (
               <TableCell key={column.header}>
-                {column.render ? column.render(item) : column.field ? item[column.field] as unknown as React.ReactNode : null}
+                {column.render
+                  ? column.render(item)
+                  : column.field
+                    ? (item[column.field] as unknown as ReactNode)
+                    : null}
               </TableCell>
             ))}
           </TableRow>

@@ -1,11 +1,11 @@
 // References:
 // Services and Providers: https://docs.nestjs.com/providers
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { CreatePaymentDto, UpdatePaymentDto } from '../dto/payment.dto';
-import { Client } from '../entities/client.entity';
-import { Payment } from '../entities/payment.entity';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { CreatePaymentDto, UpdatePaymentDto } from "../dto/payment.dto";
+import { Client } from "../entities/client.entity";
+import { Payment } from "../entities/payment.entity";
 
 @Injectable()
 export class PaymentService {
@@ -34,13 +34,13 @@ export class PaymentService {
   }
 
   async getAll(): Promise<Payment[] | []> {
-    return this.paymentRepository.find({ relations: ['client'] }) ?? [];
+    return this.paymentRepository.find({ relations: ["client"] }) ?? [];
   }
 
   async get(id: number): Promise<Payment | null> {
     const payment = await this.paymentRepository.findOne({
       where: { id },
-      relations: ['client'],
+      relations: ["client"],
     });
     if (!payment) {
       throw new NotFoundException(`Payment with ID ${id} not found`);

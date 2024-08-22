@@ -1,26 +1,26 @@
-import { Reflector } from '@nestjs/core';
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthGuard } from '../auth/auth.guard';
-import { CreateClientDto, UpdateClientDto } from '../dto/client.dto';
-import { Client } from '../entities/client.entity';
-import { clientFixture } from '../fixtures/client.fixture';
-import { ClientService } from '../services/client.service';
-import { ClientController } from './client.controller';
-import { AuthService } from '../auth/auth.service';
+import { Reflector } from "@nestjs/core";
+import { Test, TestingModule } from "@nestjs/testing";
+import { AuthGuard } from "../auth/auth.guard";
+import { AuthService } from "../auth/auth.service";
+import { CreateClientDto, UpdateClientDto } from "../dto/client.dto";
+import { Client } from "../entities/client.entity";
+import { clientFixture } from "../fixtures/client.fixture";
+import { ClientService } from "../services/client.service";
+import { ClientController } from "./client.controller";
 
 class MockAuthGuard {
-  canActivate(context: any) {
-    return true; 
+  canActivate() {
+    return true;
   }
 }
 
 class MockAuthService {
   validateToken(token: string): boolean {
-    return token === 'your-secret-token';
+    return token === "your-secret-token";
   }
 }
 
-describe('ClientController', () => {
+describe("ClientController", () => {
   let clientController: ClientController;
   let clientService: ClientService;
 
@@ -54,45 +54,49 @@ describe('ClientController', () => {
     clientService = module.get<ClientService>(ClientService);
   });
 
-  describe('create', () => {
-    it('should create a client', async () => {
+  describe("create", () => {
+    it("should create a client", async () => {
       const createClientDto: CreateClientDto = {
-        name: 'Karina Ma',
-        address: '123 Street',
-        phoneNumber: '1234567890',
+        name: "Karina Ma",
+        address: "123 Street",
+        phoneNumber: "1234567890",
       };
 
-      jest.spyOn(clientService, 'create').mockResolvedValue(clientFixture);
+      jest.spyOn(clientService, "create").mockResolvedValue(clientFixture);
 
-      expect(await clientController.create(createClientDto)).toBe(clientFixture);
+      expect(await clientController.create(createClientDto)).toBe(
+        clientFixture,
+      );
       expect(clientService.create).toHaveBeenCalledWith(createClientDto);
     });
   });
 
-  describe('get all clients', () => {
-    it('should return an array of clients', async () => {
+  describe("get all clients", () => {
+    it("should return an array of clients", async () => {
       const result: Client[] = [{ ...clientFixture }];
-      jest.spyOn(clientService, 'getAll').mockResolvedValue(result);
+      jest.spyOn(clientService, "getAll").mockResolvedValue(result);
 
       expect(await clientController.getAll()).toBe(result);
     });
   });
 
-  describe('get client', () => {
-    it('should return a single client by ID', async () => {
-      jest.spyOn(clientService, 'get').mockResolvedValue(clientFixture);
+  describe("get client", () => {
+    it("should return a single client by ID", async () => {
+      jest.spyOn(clientService, "get").mockResolvedValue(clientFixture);
 
-      expect(await clientController.get('1')).toBe(clientFixture);
+      expect(await clientController.get("1")).toBe(clientFixture);
     });
   });
 
-  describe('update', () => {
-    it('should update a client by ID', async () => {
-      const updateClientDto: UpdateClientDto = { name: 'Karina Ma' };
+  describe("update", () => {
+    it("should update a client by ID", async () => {
+      const updateClientDto: UpdateClientDto = { name: "Karina Ma" };
 
-      jest.spyOn(clientService, 'update').mockResolvedValue(clientFixture);
+      jest.spyOn(clientService, "update").mockResolvedValue(clientFixture);
 
-      expect(await clientController.update('1', updateClientDto)).toBe(clientFixture);
+      expect(await clientController.update("1", updateClientDto)).toBe(
+        clientFixture,
+      );
       expect(clientService.update).toHaveBeenCalledWith(1, updateClientDto);
     });
   });

@@ -4,17 +4,17 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   Relation,
-} from 'typeorm';
-import { Client } from './client.entity';
+} from "typeorm";
+import { Client } from "./client.entity";
 @Entity()
 export class Payment {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Client, (client) => client.payments, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Client, (client) => client.payments, { onDelete: "CASCADE" })
   client: Relation<Client>;
 
-  @Column({ type: 'float' })
+  @Column({ type: "float" })
   amount: number;
 
   @Column()
@@ -29,6 +29,6 @@ export class Payment {
   @Column({ nullable: true })
   notes?: string;
 
-  @Column({ default: 'Pending' })
+  @Column({ default: "Pending" })
   status: string;
 }

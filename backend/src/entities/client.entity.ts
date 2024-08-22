@@ -4,8 +4,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   Relation,
-} from 'typeorm';
-import { Payment } from './payment.entity';
+} from "typeorm";
+import { Payment } from "./payment.entity";
 
 @Entity()
 export class Client {

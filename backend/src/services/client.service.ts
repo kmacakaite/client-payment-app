@@ -1,10 +1,10 @@
 // References:
 // Services and Providers: https://docs.nestjs.com/providers
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { CreateClientDto, UpdateClientDto } from '../dto/client.dto';
-import { Client } from '../entities/client.entity';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { CreateClientDto, UpdateClientDto } from "../dto/client.dto";
+import { Client } from "../entities/client.entity";
 
 @Injectable()
 export class ClientService {

@@ -1,28 +1,28 @@
-import { Reflector } from '@nestjs/core';
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthGuard } from '../auth/auth.guard';
-import { AuthService } from '../auth/auth.service';
-import { UpdatePaymentDto } from '../dto/payment.dto';
-import { Payment } from '../entities/payment.entity';
-import { clientFixture } from '../fixtures/client.fixture';
-import { createPaymentDto, payments } from '../fixtures/payment.fixture';
-import { PaymentService } from '../services/payment.service';
-import { PaymentController } from './payment.controller';
+import { Reflector } from "@nestjs/core";
+import { Test, TestingModule } from "@nestjs/testing";
+import { AuthGuard } from "../auth/auth.guard";
+import { AuthService } from "../auth/auth.service";
+import { UpdatePaymentDto } from "../dto/payment.dto";
+import { Payment } from "../entities/payment.entity";
+import { clientFixture } from "../fixtures/client.fixture";
+import { createPaymentDto, payments } from "../fixtures/payment.fixture";
+import { PaymentService } from "../services/payment.service";
+import { PaymentController } from "./payment.controller";
 
 // Mock implementations
 class MockAuthGuard {
-  canActivate(context: any) {
+  canActivate() {
     return true;
   }
 }
 
 class MockAuthService {
   validateToken(token: string): boolean {
-    return token === 'your-secret-token';
+    return token === "your-secret-token";
   }
 }
 
-describe('PaymentController', () => {
+describe("PaymentController", () => {
   let paymentController: PaymentController;
   let paymentService: PaymentService;
 
@@ -56,75 +56,77 @@ describe('PaymentController', () => {
     paymentService = module.get<PaymentService>(PaymentService);
   });
 
-  describe('create', () => {
-    it('should create and return a new payment', async () => {
+  describe("create", () => {
+    it("should create and return a new payment", async () => {
       const result: Payment = {
         id: 1,
-        status: 'Pending',
+        status: "Pending",
         client: clientFixture,
         ...createPaymentDto,
       };
 
-      jest.spyOn(paymentService, 'create').mockResolvedValue(result);
+      jest.spyOn(paymentService, "create").mockResolvedValue(result);
 
       expect(await paymentController.create(createPaymentDto)).toBe(result);
       expect(paymentService.create).toHaveBeenCalledWith(createPaymentDto);
     });
   });
 
-  describe('getAll', () => {
-    it('should return all payments', async () => {
-      jest.spyOn(paymentService, 'getAll').mockResolvedValue(payments);
+  describe("getAll", () => {
+    it("should return all payments", async () => {
+      jest.spyOn(paymentService, "getAll").mockResolvedValue(payments);
 
       expect(await paymentController.getAll()).toBe(payments);
     });
   });
 
-  describe('get', () => {
-    it('should return a payment by id', async () => {
+  describe("get", () => {
+    it("should return a payment by id", async () => {
       const newPayment: Payment = {
         id: 1,
-        status: 'Pending',
+        status: "Pending",
         client: clientFixture,
         ...createPaymentDto,
       };
-      jest.spyOn(paymentService, 'get').mockResolvedValue(newPayment);
+      jest.spyOn(paymentService, "get").mockResolvedValue(newPayment);
 
-      expect(await paymentController.get('1')).toBe(newPayment);
+      expect(await paymentController.get("1")).toBe(newPayment);
     });
 
-    it('should return null if payment not found', async () => {
-      jest.spyOn(paymentService, 'get').mockResolvedValue(null);
+    it("should return null if payment not found", async () => {
+      jest.spyOn(paymentService, "get").mockResolvedValue(null);
 
-      expect(await paymentController.get('999')).toBeNull();
+      expect(await paymentController.get("999")).toBeNull();
     });
   });
 
-  describe('update', () => {
-    it('should update an existing payment and return it', async () => {
+  describe("update", () => {
+    it("should update an existing payment and return it", async () => {
       const newPayment: Payment = {
         id: 1,
-        status: 'Pending',
+        status: "Pending",
         client: clientFixture,
         ...createPaymentDto,
       };
-      const updatePaymentDto: UpdatePaymentDto = { status: 'Approved' };
+      const updatePaymentDto: UpdatePaymentDto = { status: "Approved" };
 
-      jest.spyOn(paymentService, 'update').mockResolvedValue({
+      jest.spyOn(paymentService, "update").mockResolvedValue({
         ...newPayment,
         ...updatePaymentDto,
       });
 
-      expect(await paymentController.update('1', updatePaymentDto)).toEqual({
+      expect(await paymentController.update("1", updatePaymentDto)).toEqual({
         ...newPayment,
         ...updatePaymentDto,
       });
     });
 
-    it('should return null if payment to update is not found', async () => {
-      jest.spyOn(paymentService, 'update').mockResolvedValue(null);
+    it("should return null if payment to update is not found", async () => {
+      jest.spyOn(paymentService, "update").mockResolvedValue(null);
 
-      expect(await paymentController.update('999', { status: 'Failed' })).toBeNull();
+      expect(
+        await paymentController.update("999", { status: "Failed" }),
+      ).toBeNull();
     });
   });
 });

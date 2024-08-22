@@ -1,5 +1,4 @@
 import { Button } from '@mui/material';
-import React from 'react';
 import { Client } from '../../../types';
 import { ColumnConfig, CustomTable } from '../../CustomTable/CustomTable';
 
@@ -8,7 +7,7 @@ interface ClientListProps {
   onEdit: (client: Client) => void;
 }
 
-export const ClientList: React.FC<ClientListProps> = ({ clients, onEdit }) => {
+export const ClientList = ({ clients, onEdit }: ClientListProps) => {
   const columns: ColumnConfig<Client>[] = [
     { header: 'Name', field: 'name' },
     { header: 'Address', field: 'address' },
@@ -24,14 +23,9 @@ export const ClientList: React.FC<ClientListProps> = ({ clients, onEdit }) => {
         >
           Edit
         </Button>
-      )
-    }
+      ),
+    },
   ];
 
-  return (
-    <CustomTable
-      columns={columns}
-      items={clients}
-    />
-  );
+  return <CustomTable columns={columns} items={clients} />;
 };

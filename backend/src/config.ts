@@ -1,5 +1,5 @@
-import { assert } from 'console';
-import * as dotenv from 'dotenv';
+import { assert } from "console";
+import * as dotenv from "dotenv";
 dotenv.config();
 
 assert(process.env.AUTH_TOKEN, "'AUTH_TOKEN' should be set");

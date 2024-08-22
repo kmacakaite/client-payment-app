@@ -7,12 +7,12 @@ import {
   Post,
   Put,
   UseGuards,
-} from '@nestjs/common';
-import { AuthGuard } from '../auth/auth.guard'; // Import the guard
-import { CreatePaymentDto, UpdatePaymentDto } from '../dto/payment.dto';
-import { PaymentService } from '../services/payment.service';
+} from "@nestjs/common";
+import { AuthGuard } from "../auth/auth.guard"; // Import the guard
+import { CreatePaymentDto, UpdatePaymentDto } from "../dto/payment.dto";
+import { PaymentService } from "../services/payment.service";
 
-@Controller('payments')
+@Controller("payments")
 @UseGuards(AuthGuard) // Apply the guard to secure the endpoints
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
@@ -27,13 +27,13 @@ export class PaymentController {
     return this.paymentService.getAll();
   }
 
-  @Get(':id')
-  get(@Param('id') id: string) {
+  @Get(":id")
+  get(@Param("id") id: string) {
     return this.paymentService.get(+id);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updatePaymentDto: UpdatePaymentDto) {
+  @Put(":id")
+  update(@Param("id") id: string, @Body() updatePaymentDto: UpdatePaymentDto) {
     return this.paymentService.update(+id, updatePaymentDto);
   }
 }

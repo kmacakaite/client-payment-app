@@ -3,8 +3,8 @@ import {
   CanActivate,
   ExecutionContext,
   UnauthorizedException,
-} from '@nestjs/common';
-import { AuthService } from './auth.service';
+} from "@nestjs/common";
+import { AuthService } from "./auth.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -13,10 +13,10 @@ export class AuthGuard implements CanActivate {
   // Determines if a request is allowed based on token validation
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
-    const token = request.headers['authorization']?.replace('Bearer ', '');
+    const token = request.headers["authorization"]?.replace("Bearer ", "");
 
     if (!token || !this.authService.validateToken(token)) {
-      throw new UnauthorizedException('Invalid or missing token');
+      throw new UnauthorizedException("Invalid or missing token");
     }
     return true;
   }
