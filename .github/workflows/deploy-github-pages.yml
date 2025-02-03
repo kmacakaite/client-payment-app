@@ -33,7 +33,7 @@ jobs:
         run: npm run build-storybook --prefix frontend
 
       - name: Upload Storybook artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: github-pages-${{ github.event.pull_request.number }} # Ensure unique artifact name
           path: frontend/storybook-static
