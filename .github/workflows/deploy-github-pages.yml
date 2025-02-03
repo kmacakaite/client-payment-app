@@ -3,41 +3,46 @@ name: PR Preview - Storybook
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, closed] 
+    types: [opened, synchronize, reopened, closed]  # Triggers on PR creation, updates, and closure
     branches:
-      - main
+      - main # Change to your default branch
 
 permissions:
   contents: read
   pages: write
   id-token: write
-  pull-requests: write
+  pull-requests: write  # Needed to comment on the PR
 
 jobs:
   deploy:
     if: github.event.action != 'closed'  # Run only if PR is NOT closed
     runs-on: ubuntu-latest
     steps:
-      # Checkout repository
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       
-      # Set up Node.js
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      # Build and deploy Storybook from the frontend subfolder
-      - uses: bitovi/github-actions-storybook-to-github-pages@v1.0.3
-        with:
-          install_command: npm ci --prefix frontend # Install dependencies inside frontend
-          build_command: npm run build-storybook --prefix frontend # Build Storybook inside frontend
-          path: frontend/storybook-static # Adjusted path where Storybook is generated
-          checkout: false
-          deploy_to_pr: true # Enables PR deployment
+      - name: Install dependencies
+        run: npm ci --prefix frontend
 
-      # Comment PR with Storybook preview URL
+      - name: Build Storybook
+        run: npm run build-storybook --prefix frontend
+
+      - name: Upload Storybook artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          name: github-pages-${{ github.event.pull_request.number }} # Ensure unique artifact name
+          path: frontend/storybook-static
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages-${{ github.event.pull_request.number }} # Match the unique artifact name
+
       - name: Comment Storybook Preview Link
         uses: marocchino/sticky-pull-request-comment@v2
         with:
@@ -51,13 +56,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Remove Storybook Preview
-        run: |
-          gh run cancel ${{ github.run_id }} || true
-          gh run delete ${{ github.run_id }} --confirm || true
+        run: gh run cancel ${{ github.run_id }} || true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
-      # Remove the PR comment with the Storybook link
+
       - name: Delete PR Comment
         uses: marocchino/sticky-pull-request-comment@v2
         with:
