@@ -8,16 +8,21 @@ jobs:
   publish:
     runs-on: ubuntu-latest # Runs on the latest Ubuntu environment.
 
+    permissions:
+      pull-requests: write  # Permissions for interacting with pull requests
+
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3 # Checks out the repository so workflow can access files.
-
+        uses: actions/checkout@v3 # Check out the repository
+        with:
+          fetch-depth: 0  # Fetch the full Git history (no shallow clone)
+      
       - name: Enable Corepack
         run: corepack enable # Enables Corepack for package management.
 
       - name: Install Dependencies
-        run: yarn
-        working-directory: frontend # Runs `yarn` inside the `frontend/` folder.
+        run: npm install
+        working-directory: frontend # Runs `npm install` inside the `frontend/` folder.
 
       - name: Publish to Chromatic
         id: chromatic # Step ID to reference outputs later.
@@ -36,18 +41,18 @@ jobs:
           # Extract the PR number from GitHub event payload JSON.
           PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 
-          # Debugging: Print PR number for verification.
-          echo "PR Number: $PR_NUMBER"
-
           # Define the comment message with Storybook preview link.
           COMMENT_BODY="🚀 Storybook preview is available: [View Storybook]($STORYBOOK_URL)"
 
-          # Use GitHub's API to post the comment on the PR.
-          curl -s -H "Authorization: token $GITHUB_TOKEN" \
-               -H "Accept: application/vnd.github.v3+json" \
-               -X POST \
-               -d "{\"body\":\"$COMMENT_BODY\"}" \
-               "https://api.github.com/repos/$REPO/issues/$PR_NUMBER/comments"
+          # Post the comment to the PR via GitHub API and suppress the output
+          RESPONSE=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+                   -H "Accept: application/vnd.github.v3+json" \
+                   -X POST \
+                   -d "{\"body\":\"$COMMENT_BODY\"}" \
+                   "https://api.github.com/repos/$REPO/issues/$PR_NUMBER/comments")
 
-          # Debugging: Confirm that the comment was posted successfully.
-          echo "✅ Storybook comment posted successfully!"
+          # Extract and print only the comment's URL for debugging purposes
+          COMMENT_URL=$(echo "$RESPONSE" | jq -r '.html_url')
+
+          # Output the URL of the comment (only the necessary part)
+          echo "✅ Storybook comment posted successfully! [View Comment]($COMMENT_URL)"

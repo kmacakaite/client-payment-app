@@ -9,8 +9,7 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage --watch=false",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "chromatic": "npx chromatic --project-token=chpt_99b2f08d0b52196"
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@emotion/react": "^11.13.0",
