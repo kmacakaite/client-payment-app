@@ -1,0 +1,65 @@
+# Workflow name
+name: PR Preview - Storybook
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed] 
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  pull-requests: write
+
+jobs:
+  deploy:
+    if: github.event.action != 'closed'  # Run only if PR is NOT closed
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout repository
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      # Set up Node.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Build and deploy Storybook from the frontend subfolder
+      - uses: bitovi/github-actions-storybook-to-github-pages@v1.0.3
+        with:
+          install_command: npm ci --prefix frontend # Install dependencies inside frontend
+          build_command: npm run build-storybook --prefix frontend # Build Storybook inside frontend
+          path: frontend/storybook-static # Adjusted path where Storybook is generated
+          checkout: false
+          deploy_to_pr: true # Enables PR deployment
+
+      # Comment PR with Storybook preview URL
+      - name: Comment Storybook Preview Link
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: storybook-preview
+          message: |
+            🚀 Storybook preview is ready!  
+            🔗 [View Storybook Preview](https://your-user.github.io/your-repo/pr-${{ github.event.pull_request.number }})
+
+  cleanup:
+    if: github.event.action == 'closed'  # Run only if PR is closed (merged or manually closed)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Remove Storybook Preview
+        run: |
+          gh run cancel ${{ github.run_id }} || true
+          gh run delete ${{ github.run_id }} --confirm || true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      # Remove the PR comment with the Storybook link
+      - name: Delete PR Comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: storybook-preview
+          delete: true

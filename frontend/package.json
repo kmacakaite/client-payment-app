@@ -9,7 +9,8 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage --watch=false",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "chromatic": "npx chromatic --project-token=chpt_99b2f08d0b52196"
   },
   "dependencies": {
     "@emotion/react": "^11.13.0",
@@ -41,6 +42,7 @@
     "@types/node": "^22.4.0",
     "@typescript-eslint/parser": "^5.62.0",
     "@vitest/coverage-v8": "^2.1.6",
+    "chromatic": "^11.25.2",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
