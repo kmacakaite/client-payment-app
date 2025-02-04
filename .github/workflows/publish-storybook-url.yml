@@ -1,0 +1,58 @@
+name: 'Chromatic Deployment' # Defines the workflow name
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened] # Runs when a PR is created, updated, or reopened.
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest # Runs on the latest Ubuntu environment.
+
+    permissions:
+      pull-requests: write  # Permissions for interacting with pull requests
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3 # Check out the repository
+        with:
+          fetch-depth: 0  # Fetch the full Git history (no shallow clone)
+      
+      - name: Enable Corepack
+        run: corepack enable # Enables Corepack for package management.
+
+      - name: Install Dependencies
+        run: npm install
+        working-directory: frontend # Runs `npm install` inside the `frontend/` folder.
+
+      - name: Publish to Chromatic
+        id: chromatic # Step ID to reference outputs later.
+        uses: chromaui/action@v1 # Uses Chromatic's GitHub Action to publish Storybook.
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }} # Authentication token for Chromatic.
+          token: ${{ secrets.GITHUB_TOKEN }} # GitHub token for permissions.
+          workingDir: frontend # Specifies that Chromatic should run inside `frontend/`.
+
+      - name: Post Storybook URL as PR Comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub token needed to post comments.
+          STORYBOOK_URL: ${{ steps.chromatic.outputs.storybookUrl }} # Retrieves Storybook URL from Chromatic output.
+          REPO: ${{ github.repository }} # Stores repo name (e.g., "user/repo").
+        run: |
+          # Extract the PR number from GitHub event payload JSON.
+          PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+
+          # Define the comment message with Storybook preview link.
+          COMMENT_BODY="🚀 Storybook preview is available: [View Storybook]($STORYBOOK_URL)"
+
+          # Post the comment to the PR via GitHub API and suppress the output
+          RESPONSE=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+                   -H "Accept: application/vnd.github.v3+json" \
+                   -X POST \
+                   -d "{\"body\":\"$COMMENT_BODY\"}" \
+                   "https://api.github.com/repos/$REPO/issues/$PR_NUMBER/comments")
+
+          # Extract and print only the comment's URL for debugging purposes
+          COMMENT_URL=$(echo "$RESPONSE" | jq -r '.html_url')
+
+          # Output the URL of the comment (only the necessary part)
+          echo "✅ Storybook comment posted successfully! [View Comment]($COMMENT_URL)"
